@@ -1,4 +1,3 @@
-from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.cache import cache_page
 from config.settings import CACHE_TTL
@@ -27,14 +26,17 @@ class testApiViewSet(viewsets.ModelViewSet):
         if request.method == "GET":
             start = time.time()
             param = request.GET.get('text')
-            print("쿼리 매개변수", param)
             check_param_in_cache = cache.get(param)
             if check_param_in_cache is None:
-                print("캐시에 존재하지 않음")
+                print("캐시에 존재하지 않습니다.")
+                # 매개변수 - (Key, Value, 캐시 지속 시간)
                 cache.set(param, param, 60*60)
-                print("저장 완료")
+                print("캐시에 저장 완료")
             else:
-                print("캐시에 존재 함", cache.get(param))
-            print("걸린 시간 : ", time.time() - start)
-            n = testapp_model.testApiModel.objects.filter(text=param).count()
-            return Response(n)
+                print("캐시에 존재합니다.")
+            print("작업에 걸린 시간 : ", time.time() - start)
+            try:
+                n = testapp_model.testApiModel.objects.get(text=param)
+            except:
+                return Response("Error")
+            return Response(n.text)

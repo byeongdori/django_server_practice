@@ -12,15 +12,20 @@ app = Celery('config')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
+schedule = {
+    'execute-every-30-seconds': {
+        'task': 'testapp.tasks.test_celery_execute',
+        'schedule': 30.0,
+    },
+
+    # 'execute-every-30-seconds': {
+    #     'task': 'testapp.tasks.test_api_celery_func',
+    #     'schedule': 30.0,
+    # }
+}
+
+app.conf.beat_schedule = schedule
 
 @app.task(bind=True)
 def debug_task(self):
    print('Request: {0!r}'.format(self.request))
-
-app.conf.beat_schedule = {
-    'add-every-30-seconds': {
-        'task': 'testapp.tasks.test_celery_func',
-        'schedule': 30.0,
-        'args': ("test", "testtext", 999)
-    },
-}

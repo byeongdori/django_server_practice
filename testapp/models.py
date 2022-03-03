@@ -14,8 +14,9 @@ class testapp(models.Model):
         return self.name
 
 class testApiModel(models.Model):
+
+    """ Test Api Model """
     text = models.TextField()
     
     def __str__(self):
         return self.text
-        

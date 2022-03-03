@@ -12,6 +12,7 @@ django-celery-beat = "*"
 django-celery-results = "*"
 django-redis = "*"
 djangorestframework = "*"
+gevent = "*"
 
 [dev-packages]
 
